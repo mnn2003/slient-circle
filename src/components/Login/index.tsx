@@ -1,6 +1,5 @@
 import { Navigate, useNavigate } from "react-router-dom";
 import {
-  defaultUserBtnsContainerStyle,
   errorMessageStyle,
   goToSignupContainerStyle,
   goToSignupStyle,
@@ -9,7 +8,7 @@ import {
   loginUidFormStyle,
   noAccountStyle,
 } from "./style";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import { CometChat } from "@cometchat/chat-sdk-javascript";
 import { CometChatThemeContext } from "@cometchat/chat-uikit-react";
@@ -66,10 +65,6 @@ export function Login(props: ILoginProps) {
     return <div style={errorMessageStyle(theme)}>{errorMessage}</div>;
   }
 
-  useEffect(() => {
-    // Removed fetchDefaultUsers call and state cleanup
-  }, []);
-
   if (loggedInUser) {
     return <Navigate to="/home" />;
   }
@@ -77,7 +72,7 @@ export function Login(props: ILoginProps) {
   return (
     <LoginSignup title="Login to your account">
       <div style={loginStyle()}>
-        {/* Removed the sample user section */}
+        {/* Removed the image element */}
         <form onSubmit={handleLoginWithUidFormSubmit} style={loginUidFormStyle()}>
           <TextInput
             labelText="Or else continue with login using UID"
