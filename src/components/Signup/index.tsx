@@ -1,5 +1,5 @@
 import { Navigate, useNavigate } from "react-router-dom";
-import { checkboxTextStyle, errorMessageStyle, formStyle, generateUidCheckboxStyle, generateUidStyle, submitBtnStyle } from "./style";
+import { checkboxTextStyle, errorMessageStyle, formStyle, generateUidCheckboxStyle, generateUidStyle, submitBtnStyle, loginBtnStyle } from "./style";
 import { useContext, useState } from "react";
 
 import { AppConstants } from "../../AppConstants";
@@ -9,12 +9,12 @@ import { LoginSignup } from "../LoginSignup";
 import { TextInput } from "../TextInput";
 
 interface ISignUp {
-    loggedInUser : CometChat.User | null | undefined,
-    setLoggedInUser : React.Dispatch<React.SetStateAction<CometChat.User | null | undefined>>,
-    setInterestingAsyncOpStarted : React.Dispatch<React.SetStateAction<boolean>>
+    loggedInUser: CometChat.User | null | undefined,
+    setLoggedInUser: React.Dispatch<React.SetStateAction<CometChat.User | null | undefined>>,
+    setInterestingAsyncOpStarted: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-export function Signup({ loggedInUser, setLoggedInUser, setInterestingAsyncOpStarted } : ISignUp) {
+export function Signup({ loggedInUser, setLoggedInUser, setInterestingAsyncOpStarted }: ISignUp) {
     const [name, setName] = useState("");
     const [uid, setUid] = useState("");
     const [generateUid, setGenerateUid] = useState(false);
@@ -22,12 +22,12 @@ export function Signup({ loggedInUser, setLoggedInUser, setInterestingAsyncOpSta
     const navigate = useNavigate();
     const { theme } = useContext(CometChatThemeContext);
 
-    async function handleSubmit(e : React.FormEvent<HTMLFormElement>) {
+    async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         console.log("Form submitted");
-        let newUserUid  = uid;
+        let newUserUid = uid;
         if (generateUid) {
-            newUserUid = `${name.replaceAll(" ", "")}_${Date.now()}`; 
+            newUserUid = `${name.replaceAll(" ", "")}_${Date.now()}`;
         }
         const newUser = new CometChat.User(newUserUid);
         newUser.setName(name);
@@ -37,13 +37,12 @@ export function Signup({ loggedInUser, setLoggedInUser, setInterestingAsyncOpSta
             console.log("User created:", createdUser);
             console.log(`User having uid: ${createdUser.getUid()} created successfully.`);
             setLoggedInUser(createdUser);
-            // Don't think resetting states makes a difference since I am navigating to a different page
             setName("");
             setUid("");
             setGenerateUid(false);
             navigate("/home");
         }
-        catch(error) {
+        catch (error) {
             if (error instanceof CometChat.CometChatException && error.message) {
                 setErrorMessage(error.message);
             }
@@ -59,55 +58,51 @@ export function Signup({ loggedInUser, setLoggedInUser, setInterestingAsyncOpSta
     }
 
     if (loggedInUser) {
-        return <Navigate to = "/home" />;
+        return <Navigate to="/home" />;
     }
 
     return (
-        <LoginSignup
-            title = "Sign Up"
-        >
-            <form
-                onSubmit = {handleSubmit}
-                style = {formStyle()}
-            >
+        <LoginSignup title="Sign Up">
+            <form onSubmit={handleSubmit} style={formStyle()}>
                 <TextInput
-                    labelText = "UID"
-                    placeholderText = "Enter UID here"
-                    value = {uid}
-                    onValueChange = {setUid}                    
+                    labelText="UID"
+                    placeholderText="Enter UID here"
+                    value={uid}
+                    onValueChange={setUid}
                 />
-                <TextInput 
-                    labelText = "Name"
-                    placeholderText = "Enter name here"
-                    value = {name}
-                    onValueChange = {setName}
-                    required = {true}
+                <TextInput
+                    labelText="Name"
+                    placeholderText="Enter name here"
+                    value={name}
+                    onValueChange={setName}
+                    required={true}
                 />
-                <div
-                    style = {generateUidStyle()}
-                >
-                    <input 
-                        type = "checkbox"
-                        checked = {generateUid}
-                        onChange = {() => setGenerateUid(!generateUid)}
-                        style = {generateUidCheckboxStyle()}
+                <div style={generateUidStyle()}>
+                    <input
+                        type="checkbox"
+                        checked={generateUid}
+                        onChange={() => setGenerateUid(!generateUid)}
+                        style={generateUidCheckboxStyle()}
                     />
-                    <span
-                        style = {checkboxTextStyle(theme)}
-                    >
+                    <span style={checkboxTextStyle(theme)}>
                         By clicking on this checkbox, UID will be generated automatically.
                     </span>
                 </div>
-                <div
-                    style = {errorMessageStyle(theme)}
-                >
-                    {errorMessage}
-                </div>
-                <button
-                    type = "submit"
-                    style = {submitBtnStyle(theme)}
-                >
+                {errorMessage && (
+                    <div style={errorMessageStyle(theme)}>
+                        {errorMessage}
+                    </div>
+                )}
+                <button type="submit" style={submitBtnStyle(theme)}>
                     Submit
+                </button>
+                {/* New Login Button */}
+                <button
+                    type="button"
+                    style={loginBtnStyle(theme)}
+                    onClick={() => navigate("/login")}
+                >
+                    Login
                 </button>
             </form>
         </LoginSignup>
