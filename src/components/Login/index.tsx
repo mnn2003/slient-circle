@@ -39,17 +39,6 @@ export function Login(props : ILoginProps) {
     const [defaultUsers, setDefaultUsers ] = useState<User[]>([]);
 
 
-    async function fetchDefaultUsers() {
-        try {
-            const response = await fetch("https://assets.cometchat.io/sampleapp/sampledata.json");
-            const data : UserJson = await response.json();
-            setDefaultUsers(data.users);
-        }
-        catch(error) {
-            console.log("fetching default users failed, using fallback data", error);
-            setDefaultUsers(users.users);
-        }
-    }
 
     async function login(uid : string) {
         try {
